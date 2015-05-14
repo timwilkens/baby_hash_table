@@ -66,8 +66,9 @@ main() {
 
     hasht_destroy(h);
 
-    h = hasht_new(100);
-    for (i = 0; i < 1000000; i++) {
+    // Force collisions
+    h = hasht_new(5);
+    for (i = 0; i < 1000; i++) {
         char key[8];
         sprintf(key, "%d", i);
         hasht_put(h, key, i);
