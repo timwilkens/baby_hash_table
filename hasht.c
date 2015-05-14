@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 
@@ -106,6 +107,25 @@ hasht_delete(Hash *h, char *key) {
         prev = n;
         n = n->next;
     }
+}
+
+void
+hasht_pretty_print(Hash *h) {
+    printf("{\n");
+
+    int i;
+    for (i = 0; i < h->num_buckets; i++) {
+        Node *n = h->entries[i];
+        for (;;) {
+            if (n == NULL) {
+                break;
+            }
+            printf("  %s => %d\n", n->key, n->value);
+            n = n->next;
+        }
+    }
+
+    printf("}\n");
 }
 
 int

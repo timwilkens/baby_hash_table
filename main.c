@@ -75,6 +75,7 @@ main() {
         v = hasht_get(h, key, &found);
         assert(found);
     }
+    assert(hasht_size(h) == 1000);
 
     return 0;
 }

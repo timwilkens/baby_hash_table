@@ -8,6 +8,7 @@ void hasht_put(Hash *, char *, int);
 int hasht_get(Hash *, char *, bool *);
 void hasht_delete(Hash *, char *);
 int hasht_size(Hash *);
+void hasht_pretty_print(Hash *h);
 
 int hasht_index(Hash *, char *);
 unsigned long hash(unsigned char *str); 
