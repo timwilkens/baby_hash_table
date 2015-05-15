@@ -15,6 +15,8 @@ void hasht_pretty_print(Hash *h);
 char **hasht_keys(Hash *);
 void hasht_destroy_keys(Hash *, char **);
 bool hasht_equal(Hash *, Hash *);
+int hasht_avg_collisions(Hash *);
+int hasht_buckets(Hash *);
 
 int hasht_index(Hash *, char *);
 unsigned long hash(unsigned char *str); 

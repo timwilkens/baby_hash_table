@@ -66,12 +66,17 @@ main() {
 
     hasht_destroy(h);
 
-    // Force collisions
-    h = hasht_new(5);
+    // Force collisions and growth
+    h = hasht_new(1);
     for (i = 0; i < 1000; i++) {
         char key[8];
         sprintf(key, "%d", i);
         hasht_put(h, key, i);
+    }
+
+    for (i = 0; i < 1000; i++) {
+        char key[8];
+        sprintf(key, "%d", i);
         v = hasht_get(h, key, &found);
         assert(found);
     }

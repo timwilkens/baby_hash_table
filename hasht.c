@@ -67,8 +67,48 @@ hasht_copy(Hash *dest, Hash *src) {
     }
 }
 
+int
+hasht_avg_collisions(Hash *h) {
+
+    int i, found, buckets;
+    found = 0;
+    buckets = 0;
+
+    for (i = 0; i < h->num_buckets; i++) {
+        Node *n = h->entries[i];
+        if (n == NULL) {
+            continue;
+        }
+        buckets++;
+        for (;;) {
+            found++;
+            if (n->next == NULL) {
+                break;
+            }
+            n = n->next;
+        }
+    }
+
+    if (buckets == 0) {
+        return 0;
+    }
+
+    return (int)found/buckets;
+}
+
 void
 hasht_put(Hash *h, char *key, int value) {
+     int collisions = hasht_avg_collisions(h);
+     // Grow
+     if (collisions > 5) {
+         Hash *copy = hasht_grow_clone(h);
+         h->num_buckets = copy->num_buckets;
+         free(h->entries);
+         h->entries = copy->entries;
+         copy->entries = NULL;
+         hasht_destroy(copy);
+     }
+
      int index = hasht_index(h, key);
      Node *n = h->entries[index];
      if (n ==  NULL) {
@@ -220,6 +260,11 @@ hasht_equal(Hash *h1, Hash *h2) {
 int
 hasht_size(Hash *h) {
     return h->num_keys;
+}
+
+int
+hasht_buckets(Hash *h) {
+    return h->num_buckets;
 }
 
 int
