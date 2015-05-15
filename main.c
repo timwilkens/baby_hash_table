@@ -80,5 +80,26 @@ main() {
     char **ks = hasht_keys(h);
     hasht_destroy_keys(h, ks);
 
+    h = hasht_new(5);
+    hasht_put(h, "foo", 1);
+    hasht_put(h, "bar", 2);
+    hasht_put(h, "baz", 3);
+
+    Hash *copy = hasht_clone(h);
+    assert(hasht_equal(h, copy));
+    hasht_destroy(copy);
+
+    Hash *grown = hasht_grow_clone(h);
+    assert(hasht_equal(h, grown));
+    hasht_destroy(grown);
+
+    Hash *diff = hasht_new(5);
+    hasht_put(diff, "this", 10);
+
+    assert(!hasht_equal(h, diff));
+
+    hasht_destroy(diff);
+    hasht_destroy(h);
+
     return 0;
 }

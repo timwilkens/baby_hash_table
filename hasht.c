@@ -37,6 +37,36 @@ hasht_destroy(Hash *h) {
     return;
 }
 
+Hash *
+hasht_clone(Hash *h) {
+    Hash *copy = hasht_new(h->num_buckets);
+    hasht_copy(copy, h);
+    return copy;
+}
+
+Hash *
+hasht_grow_clone(Hash *h) {
+    // Double the number of buckets
+    Hash *copy = hasht_new(h->num_buckets*2);
+    hasht_copy(copy, h);
+    return copy;
+}
+
+void
+hasht_copy(Hash *dest, Hash *src) {
+    int i;
+    for (i = 0; i < src->num_buckets; i++) {
+        Node *n = src->entries[i];
+        for (;;) {
+            if (n == NULL) {
+                break;
+            }
+            hasht_put(dest, n->key, n->value);
+            n = n->next;
+        }
+    }
+}
+
 void
 hasht_put(Hash *h, char *key, int value) {
      int index = hasht_index(h, key);
@@ -156,6 +186,35 @@ hasht_pretty_print(Hash *h) {
     }
 
     printf("}\n");
+}
+
+bool
+hasht_equal(Hash *h1, Hash *h2) {
+
+    if (h1->num_keys != h2->num_keys) {
+        return false;
+    }
+
+    char **ks = hasht_keys(h1);
+    int i;
+    bool f1,f2;
+
+    for (i = 0; i < h1->num_keys; i++) {
+        int v1 = hasht_get(h1, ks[i], &f1);
+        int v2 = hasht_get(h2, ks[i], &f2);
+
+        if (!f2 || !f1) {
+            hasht_destroy_keys(h1, ks);
+            return false;
+        }
+        if (v1 != v2) {
+            hasht_destroy_keys(h1, ks);
+            return false;
+        }
+    }
+
+    hasht_destroy_keys(h1, ks);
+    return true;
 }
 
 int
