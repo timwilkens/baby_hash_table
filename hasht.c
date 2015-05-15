@@ -109,6 +109,36 @@ hasht_delete(Hash *h, char *key) {
     }
 }
 
+char **
+hasht_keys(Hash *h) {
+
+    char **keys = calloc(h->num_keys, sizeof(char*));
+    int i, index;
+    index = 0;
+
+    for (i = 0; i < h->num_buckets; i++) {
+        Node *n = h->entries[i];
+        for (;;) {
+            if (n == NULL) {
+                break;
+            }
+            keys[index++] = strdup(n->key);
+            n = n->next;
+        }
+    }
+
+    return keys;
+}
+
+void
+hasht_destroy_keys(Hash *h, char **ks) {
+    int i;
+    for (i = 0; i < h->num_keys; i++) {
+        free(ks[i]);
+    }
+    free(ks);
+}
+
 void
 hasht_pretty_print(Hash *h) {
     printf("{\n");

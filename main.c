@@ -77,5 +77,8 @@ main() {
     }
     assert(hasht_size(h) == 1000);
 
+    char **ks = hasht_keys(h);
+    hasht_destroy_keys(h, ks);
+
     return 0;
 }
